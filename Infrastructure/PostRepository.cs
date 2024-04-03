@@ -26,7 +26,7 @@ public class PostRepository(AppDbContext context) : IPostRepository, IDisposable
 		return await _context.Posts.ToListAsync();
 	}
 
-	public async Task AcquireLock(string resourceName, string action)
+	public async Task GetLock(string resourceName, string action)
 	{
 		if (_transaction == null)
 		{
@@ -37,7 +37,7 @@ public class PostRepository(AppDbContext context) : IPostRepository, IDisposable
 		command.CommandType = CommandType.StoredProcedure;
 		command.Parameters.Add(new SqlParameter("Resource", resourceName));
 		command.Parameters.Add(new SqlParameter("LockMode", "Exclusive"));
-		// The command will wait for a maximum of 10 seconds to acquire the lock
+		// The command will wait for a maximum of 10 seconds to get the lock
 		command.Parameters.Add(new SqlParameter("LockTimeout", "10000"));
 		var returnParameter = new SqlParameter("Result", SqlDbType.Int)
 		{
@@ -49,7 +49,7 @@ public class PostRepository(AppDbContext context) : IPostRepository, IDisposable
 		command.Transaction = _transaction.GetDbTransaction();
 		await command.ExecuteNonQueryAsync();
 		var result = (int)returnParameter.Value;
-		if (result != 0)
+		if (result < 0)
 		{
 			throw new ConcurrentConflictException($"A concurrent {action} occurred for resource {resourceName}");
 		}

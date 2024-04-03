@@ -10,7 +10,7 @@ public interface IPostRepository
 
 	Task BeginTransactionAsync();
 
-	Task AcquireLock(string resourceName, string action);
+	Task GetLock(string resourceName, string action);
 
 	Task CommitAsync();
 

@@ -19,8 +19,8 @@ public class PostService(IPostRepository repository) : IPostService
         try
         {
             await _repository.BeginTransactionAsync();
-            var resourceName = nameof(LikePostAsync) + postId;
-            await _repository.AcquireLock(resourceName, nameof(LikePostAsync));
+            var resourceName = $"{nameof(Post)}_{postId}";
+            await _repository.GetLock(resourceName, nameof(LikePostAsync));
             await _repository.LikePostAsync(postId);
             await _repository.CommitAsync();
             result = new(true, "Successfully liked post");
