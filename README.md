@@ -15,5 +15,8 @@ Then
 dotnet ef database update
 dotnet run
 ```
+
+You should be able to access the Swagger UI at https://localhost:7073/swagger/index.html
+
 ## License
 [MIT](./LICENSE)
