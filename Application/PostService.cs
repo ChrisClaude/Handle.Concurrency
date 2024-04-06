@@ -23,7 +23,7 @@ public class PostService(IPostRepository repository) : IPostService
 			await _repository.GetLock(resourceName, nameof(LikePostAsync));
 			await _repository.LikePostAsync(postId);
 			// Uncomment the following and send 2 or more requests simultaneously to simulate a concurrent request
-			// await Task.Delay(11000);
+			// await Task.Delay(15000);
 			await _repository.CommitAsync();
 			result = new(true, "Successfully liked post");
 
